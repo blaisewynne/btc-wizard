@@ -24,5 +24,10 @@ int get_value() {
 }
 
 int main() {
+  struct variables env;
   get_value();
+  env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.txt", "r");
+  while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
+    printf("%s", env.buffer);
+  }
 }
