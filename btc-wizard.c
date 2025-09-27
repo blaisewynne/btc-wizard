@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <curl/curl.h>
 #include <stdbool.h>
+#include <time.h>
+
 struct variables {
   CURL *curl;
   CURLcode res;
@@ -9,6 +11,8 @@ struct variables {
   FILE *output;
   char buffer[1024];
   char *end;
+  float btc_value;
+  time_t current_time;
 };
 
 int get_value() {
@@ -37,10 +41,14 @@ int main() {
   struct variables env;
   while (true) {
   get_value();
+  time(&env.current_time);
   env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.txt", "r");
   while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
-    remove_comma(env.buffer, ',');
-    printf("%s", env.buffer);
+    env.btc_value = strtold(env.buffer, &env.end);
+    printf("\rCurrent Value: %s", env.buffer);
+    printf("\rCurrent Time: %s", ctime(&env.current_time));
+    //printf("%.2f\n", env.btc_value);
   }
   }
 }
+
