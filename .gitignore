@@ -1,8 +1,8 @@
 # Nix shell
-shell.nix
+.nix
 
 # Project specific file
-data.txt
+.txt
 
 # Prerequisites
 *.d
