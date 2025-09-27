@@ -44,6 +44,8 @@ int main() {
   time(&env.current_time);
   env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.txt", "r");
   while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
+    printf("\033[H");
+    printf("\033[2J");
     env.btc_value = strtold(env.buffer, &env.end);
     printf("\rCurrent Value: %s", env.buffer);
     printf("\rCurrent Time: %s", ctime(&env.current_time));
