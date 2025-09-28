@@ -47,8 +47,8 @@ int main() {
     printf("\033[H");
     printf("\033[2J");
     env.btc_value = strtold(env.buffer, &env.end);
-    printf("\rCurrent Value: %s", env.buffer);
-    printf("\rCurrent Time: %s", ctime(&env.current_time));
+    printf("\x1b[0;33mCurrent Value: \x1b[1;32m%s\x1b[0;37m", env.buffer);
+    printf("\x1b[0;34mCurrent Time: \x1b[4;36m%s\x1b[0;37m", ctime(&env.current_time));
     //printf("%.2f\n", env.btc_value);
   }
   }
