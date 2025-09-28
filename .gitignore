@@ -2,7 +2,7 @@
 .nix
 
 # Project specific file
-.txt
+data.txt
 
 # Prerequisites
 *.d
