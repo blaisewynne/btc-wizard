@@ -13,9 +13,25 @@ struct variables {
   char *end;
   float btc_value;
   time_t current_time;
+  char text[100];
 };
 
-int get_value() {
+void get_txt() {
+  struct variables env;
+  env.fptr = fopen("test.txt", "r");
+  fgets(env.text, 100, env.fptr);
+  if (env.fptr == NULL) {
+    perror("No text found");
+  }
+
+  while (fgets(env.text, sizeof(env.text), env.fptr) != NULL) {
+    printf("%s", env.text);
+  }
+  fclose(env.fptr);
+
+}
+
+void get_value() {
   struct variables env;
   env.curl = curl_easy_init();
   if(env.curl) {
@@ -43,13 +59,15 @@ int main() {
   get_value();
   time(&env.current_time);
   env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.txt", "r");
+  env.btc_value = remove_comma(env.buffer, ','); 
   while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
     printf("\033[H");
     printf("\033[2J");
+    get_txt();
     env.btc_value = strtold(env.buffer, &env.end);
-    printf("\x1b[0;33mCurrent Value: \x1b[1;32m%s\x1b[0;37m", env.buffer);
+    printf("\x1b[0;33mCurrent Value (₿): \x1b[1;32m%s\x1b[0;37m", env.buffer);
     printf("\x1b[0;34mCurrent Time: \x1b[4;36m%s\x1b[0;37m", ctime(&env.current_time));
-    //printf("%.2f\n", env.btc_value);
+    printf("%f", env.btc_value);
   }
   }
 }
