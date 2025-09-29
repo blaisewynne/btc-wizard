@@ -18,15 +18,26 @@ struct variables {
 
 void get_txt() {
   struct variables env;
-  env.fptr = fopen("test.txt", "r");
+  env.fptr = fopen("logo1.txt", "r");
   fgets(env.text, 100, env.fptr);
   if (env.fptr == NULL) {
     perror("No text found");
   }
 
   while (fgets(env.text, sizeof(env.text), env.fptr) != NULL) {
-    printf("%s", env.text);
+    printf("\x1b[0;32m%s", env.text);
   }
+
+  env.fptr = fopen("logo2.txt", "r");
+  fgets(env.text, 100, env.fptr);
+  if (env.fptr == NULL) {
+    perror("No text found");
+  }
+
+  while (fgets(env.text, sizeof(env.text), env.fptr) != NULL) {
+    printf("\x1b[0;34m%s\x1b[0;32m", env.text);
+  }
+
   fclose(env.fptr);
 
 }
