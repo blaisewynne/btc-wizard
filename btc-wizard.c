@@ -3,15 +3,15 @@
 #include <curl/curl.h>
 #include <stdbool.h>
 #include <time.h>
-
+#include <string.h>
 struct variables {
   CURL *curl;
   CURLcode res;
   FILE *fptr;
   FILE *output;
-  char buffer[1024];
+  char buffer[12];
   char *end;
-  float btc_value;
+  char btc_value[12];
   time_t current_time;
   char text[100];
 };
@@ -46,7 +46,7 @@ void get_value() {
   struct variables env;
   env.curl = curl_easy_init();
   if(env.curl) {
-    env.fptr = fopen("data.txt", "w");
+    env.fptr = fopen("data.temp", "w");
     curl_easy_setopt(env.curl, CURLOPT_URL, "https://www.google.com/finance/quote/BTC-AUD");
     curl_easy_setopt(env.curl, CURLOPT_WRITEDATA, env.fptr);
     env.res = curl_easy_perform(env.curl);
@@ -55,7 +55,7 @@ void get_value() {
   }
 }
 
-char remove_comma(char * str, char c) {
+char remove_comma(char *str, char c) {
   char *pr = str, *pw = str;
   while (*pr) {
     *pw = *pr++;
@@ -69,16 +69,24 @@ int main() {
   while (true) {
   get_value();
   time(&env.current_time);
-  env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.txt", "r");
-  env.btc_value = remove_comma(env.buffer, ','); 
+  env.output = popen("grep -Po '(?<=<div class=\"YMlKec fxKbKc\">)(.*?)(?=</div>)' data.temp", "r");
   while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
     printf("\033[H");
     printf("\033[2J");
     get_txt();
-    env.btc_value = strtold(env.buffer, &env.end);
     printf("\x1b[0;33mCurrent Value (₿): \x1b[1;32m%s\x1b[0;37m", env.buffer);
     printf("\x1b[0;34mCurrent Time: \x1b[4;36m%s\x1b[0;37m", ctime(&env.current_time));
-    printf("%f", env.btc_value);
+    env.fptr = fopen("history.temp", "a");
+    fprintf(env.fptr, "%s, %s\n", env.buffer, ctime(&env.current_time));
+    fclose(env.fptr);
+    strcpy(env.btc_value, env.buffer);
+    remove_comma(env.btc_value, ',');
+    double value = atof(env.btc_value);
+    printf("Value: ");
+    for (int i = 0; i < ((value / 200000) * 100 / 2 ); i++) {
+      printf("#");
+    }
+    printf("\n");
   }
   }
 }
