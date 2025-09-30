@@ -1,5 +1,5 @@
 # Nix shell
-.nix
+*.nix
 
 # Project specific file
 data.txt
