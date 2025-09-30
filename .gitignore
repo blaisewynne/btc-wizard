@@ -4,6 +4,7 @@
 # Project specific file
 *.txt
 *.csv
+*.temp
 # Prerequisites
 *.d
 
