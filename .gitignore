@@ -2,8 +2,8 @@
 *.nix
 
 # Project specific file
-data.txt
-
+*.txt
+*.csv
 # Prerequisites
 *.d
 
