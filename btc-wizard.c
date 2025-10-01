@@ -19,7 +19,6 @@ struct variables {
 void get_txt() {
   struct variables env;
   env.fptr = fopen("logo1.txt", "r");
-  fgets(env.text, 100, env.fptr);
   if (env.fptr == NULL) {
     perror("No text found");
   }
@@ -29,7 +28,6 @@ void get_txt() {
   }
 
   env.fptr = fopen("logo2.txt", "r");
-  fgets(env.text, 100, env.fptr);
   if (env.fptr == NULL) {
     perror("No text found");
   }
@@ -82,9 +80,9 @@ int main() {
     strcpy(env.btc_value, env.buffer);
     remove_comma(env.btc_value, ',');
     double value = atof(env.btc_value);
-    printf("Value: ");
+    printf("\x1b[0;35mValue: ");
     for (int i = 0; i < ((value / 200000) * 100 / 2 ); i++) {
-      printf("#");
+      printf("\x1b[01;34m#");
     }
     printf("\n");
   }
