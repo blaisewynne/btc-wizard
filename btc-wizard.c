@@ -71,6 +71,7 @@ int main() {
   while (fgets(env.buffer, sizeof(env.buffer), env.output) != NULL) {
     printf("\033[H");
     printf("\033[2J");
+   //printf("\e[?25l");
     get_txt();
     printf("\x1b[0;33mCurrent Value (₿): \x1b[1;32m%s\x1b[0;37m", env.buffer);
     printf("\x1b[0;34mCurrent Time: \x1b[4;36m%s\x1b[0;37m", ctime(&env.current_time));
@@ -80,11 +81,18 @@ int main() {
     strcpy(env.btc_value, env.buffer);
     remove_comma(env.btc_value, ',');
     double value = atof(env.btc_value);
-    printf("\x1b[0;35mValue: ");
-    for (int i = 0; i < ((value / 200000) * 100 / 2 ); i++) {
-      printf("\x1b[01;34m#");
+    printf("\x1b[0;35mValue: \x1b[1;34m[");
+    int i;
+    int z;
+    for (i = 0; i < ((value / 200000) * 100 / 5); i++) {
+      printf("#");
+      //printf("%d", i);
     }
-    printf("\n");
+    for (z = 0; z < (101 - (value / 200000) * 100 / 5); z++) {
+      //printf("%d", z);
+      printf("-");
+    }
+    printf("]\n");
   }
   }
 }
